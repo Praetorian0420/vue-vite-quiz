@@ -14,6 +14,15 @@ The game is designed to feel light, friendly, and encouraging. Players work thro
 
 The goal is simple: answer as many questions correctly as possible and finish with a fun little brain workout.
 
+## Recent changes
+
+- Expanded the quiz from five questions to ten questions.
+- Added questions about history, technology, literature, nature, and geography.
+- Randomized the order of quiz questions for each playthrough.
+- Randomized the answer choices while preserving the correct answer.
+- Re-randomized questions and answers whenever the player selects “Play again.”
+- Updated the quiz totals and result messages to use the current question count.
+
 ## How it was made
 
 This app was created as a small Vue 3 project using Vite for the development workflow.
