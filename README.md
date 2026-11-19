@@ -4,7 +4,7 @@ Little Quiz is a small trivia game built with Vue and Vite. It presents a short 
 
 ## About the game
 
-The game is designed to feel light, friendly, and encouraging. Players work through five questions covering a mix of science, geography, nature, and art topics. Each question shows:
+The game is designed to feel light, friendly, and encouraging. Players work through ten questions covering a mix of science, geography, history, nature, literature, and art topics. Question and answer order changes with each new quiz. Each question shows:
 
 - a category label
 - the current progress count

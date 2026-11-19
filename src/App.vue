@@ -37,20 +37,88 @@ const questions = [
     correctAnswer: 0,
     explanation: 'A cheetah can sprint faster than any other land animal.',
   },
+  {
+    category: 'History',
+    prompt: 'In which country were the ancient pyramids of Giza built?',
+    answers: ['Greece', 'Egypt', 'Mexico', 'India'],
+    correctAnswer: 1,
+    explanation: 'The pyramids of Giza were built in ancient Egypt.',
+  },
+  {
+    category: 'Technology',
+    prompt: 'What does CPU stand for?',
+    answers: ['Central Processing Unit', 'Computer Personal Utility', 'Central Program User', 'Core Processing Utility'],
+    correctAnswer: 0,
+    explanation: 'CPU stands for Central Processing Unit, the part of a computer that performs instructions.',
+  },
+  {
+    category: 'Literature',
+    prompt: 'Who wrote "The Adventures of Tom Sawyer"?',
+    answers: ['Charles Dickens', 'Mark Twain', 'Jane Austen', 'Herman Melville'],
+    correctAnswer: 1,
+    explanation: 'American author Mark Twain wrote "The Adventures of Tom Sawyer."',
+  },
+  {
+    category: 'Nature',
+    prompt: 'Which organ pumps blood through the human body?',
+    answers: ['Lungs', 'Brain', 'Heart', 'Kidneys'],
+    correctAnswer: 2,
+    explanation: 'The heart pumps blood throughout the circulatory system.',
+  },
+  {
+    category: 'Geography',
+    prompt: 'Which is the largest ocean on Earth?',
+    answers: ['Atlantic Ocean', 'Indian Ocean', 'Arctic Ocean', 'Pacific Ocean'],
+    correctAnswer: 3,
+    explanation: 'The Pacific Ocean is the largest ocean on Earth.',
+  },
 ]
 
+function shuffleItems(items) {
+  const shuffledItems = [...items]
+
+  for (let index = shuffledItems.length - 1; index > 0; index -= 1) {
+    const randomIndex = Math.floor(Math.random() * (index + 1))
+    ;[shuffledItems[index], shuffledItems[randomIndex]] = [shuffledItems[randomIndex], shuffledItems[index]]
+  }
+
+  return shuffledItems
+}
+
+function prepareQuiz() {
+  return shuffleItems(questions).map((question) => {
+    const answersWithIndexes = question.answers.map((answer, index) => ({
+      answer,
+      isCorrect: index === question.correctAnswer,
+    }))
+    const shuffledAnswers = shuffleItems(answersWithIndexes)
+
+    return {
+      ...question,
+      answers: shuffledAnswers.map((item) => item.answer),
+      correctAnswer: shuffledAnswers.findIndex((item) => item.isCorrect),
+    }
+  })
+}
+
+const quizQuestions = ref(prepareQuiz())
 const questionIndex = ref(0)
 const selectedAnswer = ref(null)
 const score = ref(0)
 
-const currentQuestion = computed(() => questions[questionIndex.value])
-const isComplete = computed(() => questionIndex.value >= questions.length)
+const currentQuestion = computed(() => quizQuestions.value[questionIndex.value])
+const isComplete = computed(() => questionIndex.value >= quizQuestions.value.length)
 const progress = computed(
-  () => Math.round(((questionIndex.value + (selectedAnswer.value === null ? 0 : 1)) / questions.length) * 100),
+  () =>
+    Math.round(
+      ((questionIndex.value + (selectedAnswer.value === null ? 0 : 1)) / quizQuestions.value.length) * 100,
+    ),
 )
 const resultMessage = computed(() => {
-  if (score.value === questions.length) return 'Perfect score! You really know your stuff.'
-  if (score.value >= 3) return 'Great work! You know a little about a lot.'
+  if (score.value === quizQuestions.value.length) return 'Perfect score! You really know your stuff.'
+  if (score.value >= Math.ceil(quizQuestions.value.length * 0.6)) {
+    return 'Great work! You know a little about a lot.'
+  }
   return 'Nice try! Every question is a chance to learn something new.'
 })
 
@@ -76,6 +144,7 @@ function nextQuestion() {
 }
 
 function restartQuiz() {
+  quizQuestions.value = prepareQuiz()
   questionIndex.value = 0
   selectedAnswer.value = null
   score.value = 0
@@ -96,14 +165,14 @@ function restartQuiz() {
       <section class="intro">
         <span class="eyebrow"><span class="eyebrow-dot"></span> YOUR MOMENT OF CURIOSITY</span>
         <h1>A little quiz.<br /><span>A lot of fun.</span></h1>
-        <p>Five quick questions to give your brain a happy little stretch.</p>
+        <p>{{ quizQuestions.length }} quick questions to give your brain a happy little stretch.</p>
       </section>
 
       <section v-if="!isComplete" class="quiz-card" aria-label="Quiz">
         <div class="quiz-card-top">
           <div class="question-count">
             <span class="count-current">{{ questionIndex + 1 }}</span>
-            <span>of {{ questions.length }} questions</span>
+            <span>of {{ quizQuestions.length }} questions</span>
           </div>
           <div class="score-pill" aria-live="polite">
             <i class="bi bi-stars" aria-hidden="true"></i>
@@ -176,7 +245,7 @@ function restartQuiz() {
           <span v-if="selectedAnswer === null" class="action-hint">Your score is looking good!</span>
           <span v-else class="action-hint">Ready for the next one?</span>
           <button class="btn btn-primary next-button" type="button" :disabled="selectedAnswer === null" @click="nextQuestion">
-            {{ questionIndex === questions.length - 1 ? 'See my results' : 'Next question' }}
+            {{ questionIndex === quizQuestions.length - 1 ? 'See my results' : 'Next question' }}
             <i class="bi bi-arrow-right" aria-hidden="true"></i>
           </button>
         </div>
@@ -189,17 +258,17 @@ function restartQuiz() {
         <p class="results-message">{{ resultMessage }}</p>
         <div class="final-score">
           <span class="final-score-number">{{ score }}</span>
-          <span class="final-score-total">/ {{ questions.length }}<br />points</span>
+          <span class="final-score-total">/ {{ quizQuestions.length }}<br />points</span>
         </div>
         <div
           class="progress quiz-progress results-progress"
           role="progressbar"
-          :aria-valuenow="Math.round((score / questions.length) * 100)"
+          :aria-valuenow="Math.round((score / quizQuestions.length) * 100)"
           aria-valuemin="0"
           aria-valuemax="100"
-          :aria-label="`Final score: ${score} out of ${questions.length}`"
+          :aria-label="`Final score: ${score} out of ${quizQuestions.length}`"
         >
-          <div class="progress-bar" :style="{ width: `${(score / questions.length) * 100}%` }"></div>
+          <div class="progress-bar" :style="{ width: `${(score / quizQuestions.length) * 100}%` }"></div>
         </div>
         <button class="btn btn-primary restart-button" type="button" @click="restartQuiz">
           <i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i>
