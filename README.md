@@ -2,6 +2,8 @@
 
 Little Quiz is a small trivia game built with Vue and Vite. It presents a short series of multiple-choice questions, gives instant feedback after each answer, tracks the player's score, and lets them replay the experience when they finish.
 
+Play the live quiz: [vue-vite-ai-quiz.netlify.app](https://vue-vite-ai-quiz.netlify.app/)
+
 ## About the game
 
 The game is designed to feel light, friendly, and encouraging. Players work through ten questions covering a mix of science, geography, history, nature, literature, and art topics. Question and answer order changes with each new quiz. Each question shows:
