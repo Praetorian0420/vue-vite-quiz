@@ -85,6 +85,10 @@ In the repository's Pages settings:
 
 The workflow requests `contents: read`, `actions: read`, `pages: write`, and `id-token: write`, and attempts to enable Pages automatically. If the deployment action reports a 404, configure the Pages source manually and confirm the repository allows GitHub Actions to access Pages.
 
+## Deploy to Netlify
+
+The repository includes a `netlify.toml` file that configures Netlify to run `npm run build` and publish the generated `dist` folder. Import the repository into Netlify and use the detected settings. Netlify builds use the site root as the asset base; the GitHub Pages workflow sets its own repository subpath.
+
 ## Project purpose
 
 This project is a beginner-friendly example of a small interactive front-end app: a quiz game that demonstrates component state, computed values, event handling, and a clean user experience in Vue.

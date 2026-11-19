@@ -3,5 +3,5 @@ import vue from '@vitejs/plugin-vue'
 
 export default defineConfig({
   plugins: [vue()],
-  base: '/vue-vite-quiz/',
+  base: process.env.VITE_BASE_PATH || '/',
 })
