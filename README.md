@@ -73,6 +73,18 @@ You can then preview the production build with:
 npm run preview
 ```
 
+## Deploy to GitHub Pages
+
+The deployment workflow in `.github/workflows/deploy.yml` builds the app and deploys the `dist` folder through GitHub Actions.
+
+In the repository's Pages settings:
+
+1. Open **Settings > Pages**.
+2. Set **Source** to **GitHub Actions**.
+3. Push to the `main` branch or run **Deploy to GitHub Pages** from the Actions tab.
+
+The workflow requests `contents: read`, `actions: read`, `pages: write`, and `id-token: write`, and attempts to enable Pages automatically. If the deployment action reports a 404, configure the Pages source manually and confirm the repository allows GitHub Actions to access Pages.
+
 ## Project purpose
 
 This project is a beginner-friendly example of a small interactive front-end app: a quiz game that demonstrates component state, computed values, event handling, and a clean user experience in Vue.
